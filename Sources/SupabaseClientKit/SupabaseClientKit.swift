@@ -62,6 +62,30 @@ public final class SupabaseManager: Sendable {
         let session = try await self.client.auth.signInWithIdToken(credentials: credenital)
         return session
     }
+    
+    public func signOut() async throws {
+        try await self.client.auth.signOut()
+    }
+    
+    public func insert<T: Encodable>(intoTable tableName: String, value: T) async throws {
+        try await self.client
+            .from(tableName)
+            .insert(value)
+            .execute()
+    }
+    
+    public func fetch<T: Decodable>(fromTable tableName: String) async throws -> PostgrestResponse<T> {
+        return try await self.client
+            .from(tableName)
+            .select()
+            .execute()
+    }
+    
+    public var currentUser: User  {
+        get async throws {
+            try await self.client.auth.session.user
+        }
+    }
 }
 
 
