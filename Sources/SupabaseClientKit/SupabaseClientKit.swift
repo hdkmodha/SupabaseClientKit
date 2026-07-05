@@ -74,10 +74,45 @@ public final class SupabaseManager: Sendable {
             .execute()
     }
     
-    public func fetch<T: Decodable>(fromTable tableName: String) async throws -> PostgrestResponse<T> {
+    public func upsert<T: Encodable>(intoTable tableName: String, value: T) async throws {
+        try await self.client
+            .from(tableName)
+            .upsert(value)
+            .execute()
+    }
+    
+    public func fetch<T: Decodable>(fromTable tableName: String) async throws -> T {
         return try await self.client
             .from(tableName)
             .select()
+            .execute()
+            .value
+    }
+    
+    public func fetchOne<T: Decodable>(fromTable tableName: String, macthingWith column: String, withId id: PostgrestFilterValue) async throws -> T {
+        return try await self.client
+            .from(tableName)
+            .select()
+            .eq(column, value: id)
+            .single()
+            .execute()
+            .value
+    }
+    
+    public func update<T: Encodable>(fromTable tableName: String, macthingWith column: String, andWithId id: PostgrestFilterValue, item: T) async throws {
+        try await client
+            .from(tableName)
+            .update(item)
+            .eq("id", value: id)
+            .execute()
+        
+    }
+    
+    public func delete(fromTable tableName: String, macthingWith column: String, andValue value: PostgrestFilterValue) async throws {
+         try await self.client
+            .from(tableName)
+            .delete()
+            .eq(column, value: value)
             .execute()
     }
     
