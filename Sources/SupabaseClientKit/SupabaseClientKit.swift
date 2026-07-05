@@ -103,7 +103,7 @@ public final class SupabaseManager: Sendable {
         try await client
             .from(tableName)
             .update(item)
-            .eq("id", value: id)
+            .eq(column, value: id)
             .execute()
         
     }
