@@ -30,24 +30,24 @@ public final class SupabaseManager: Sendable {
         #endif
     }
     
-    public func signIn(email: String, password: String) async throws -> UUID? {
+    public func signIn(email: String, password: String) async throws -> UUID {
         let response = try await self.client.auth.signIn(email: email, password: password)
         return response.user.id
     }
     
-    public func signUp(withEmail email: String, password: String) async throws -> UUID? {
+    public func signUp(withEmail email: String, password: String) async throws -> UUID {
         let response = try await client.auth.signUp(email: email, password: password)
         let userId = response.user.id
         return userId
     }
     
-    public func signIn(withPhone phoneNumber: String, password: String) async throws -> UUID? {
+    public func signIn(withPhone phoneNumber: String, password: String) async throws -> UUID {
         let response = try await self.client.auth.signIn(phone: phoneNumber, password: password)
         let userId = response.user.id
         return userId
     }
     
-    public func signUp(withPhone phoneNumber: String, password: String) async throws -> UUID? {
+    public func signUp(withPhone phoneNumber: String, password: String) async throws -> UUID {
         let response = try await client.auth.signUp(phone: phoneNumber, password: password)
         let userId = response.user.id
         return userId
