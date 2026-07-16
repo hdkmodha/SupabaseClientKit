@@ -89,11 +89,11 @@ public final class SupabaseManager: Sendable {
             .value
     }
     
-    public func fetch<T: Decodable>(fromTable tableName: String, withMatching columnName: String, andId id: String) async throws -> T {
+    public func fetch<T: Decodable>(fromTable tableName: String, withMatching columnName: String, andId id: PostgrestFilterValue) async throws -> T {
         return try await self.client
             .from(tableName)
             .select()
-            .equals(columnName, value: id)
+            .eq(columnName, value: id)
             .execute()
             .value
     }
