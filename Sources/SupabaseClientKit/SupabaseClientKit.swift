@@ -89,6 +89,15 @@ public final class SupabaseManager: Sendable {
             .value
     }
     
+    public func fetch<T: Decodable>(fromTable tableName: String, withMatching columnName: String, andId id: String) async throws -> T {
+        return try await self.client
+            .from(tableName)
+            .select()
+            .equals(columnName, value: id)
+            .execute()
+            .value
+    }
+    
     public func fetchOne<T: Decodable>(fromTable tableName: String, macthingWith column: String, withId id: PostgrestFilterValue) async throws -> T {
         return try await self.client
             .from(tableName)
