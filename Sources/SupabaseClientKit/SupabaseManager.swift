@@ -57,7 +57,7 @@ public final class SupabaseManager: Sendable {
     }
     
     public func sendOTP(
-        forPhoneNumber number: String withChannel channel: MessagingChannel = .sms,
+        forPhoneNumber phoneNumber: String, withChannel channel: MessagingChannel = .sms,
         shouldCreateUser: Bool = true,
         data: [String: AnyJSON]? = nil,
         captchaToken: String? = nil
