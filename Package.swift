@@ -30,13 +30,6 @@ let package = Package(
         .target(
             name: "SupabaseClientKit",
             dependencies: [
-                "SupabaseClientProvider"
-            ]
-            
-        ),
-        .target(
-            name: "SupabaseClientProvider",
-            dependencies: [
                 .supabase,
             ]
         ),
