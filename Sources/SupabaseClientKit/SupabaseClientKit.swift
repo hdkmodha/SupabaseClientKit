@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SupabaseClientProvider
 import Supabase
 
 public final class SupabaseClientKit: Sendable {
