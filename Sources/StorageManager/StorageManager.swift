@@ -47,7 +47,6 @@ final class StorageManager {
     
     private func uploadImages(withId id: UUID, data: Data, bucketName: String, index: Int) async throws -> String {
         let path = "\(id)/\(index).jpg"
-        
         return try await uploadImage(forPath: path, data: data, bucketName: bucketName)
     }
     
