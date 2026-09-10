@@ -24,6 +24,14 @@ public final class SupabaseClientKit: Sendable {
         #endif
     }
     
+    
+    var projectURL: String {
+        #if DEBUG
+        self.clientProvider.devProjectURL
+        #else
+        self.clientProvider.prodProjectURL
+        #endif
+    }
 }
 
 

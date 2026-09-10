@@ -53,30 +53,25 @@ targets: [
 
 ### 1. Implement a client provider
 
-`SupabaseClientKit` needs a `SupabaseClientProvider`, a protocol that supplies the development and production clients.
+`SupabaseClientKit` needs a `SupabaseClientProvider`, a protocol that supplies the configuration for both your development and production Supabase projects.
+
+The protocol requires four string properties — the project URLs, anon keys, and storage bucket names for each environment:
 
 ```swift
-import Supabase
 import SupabaseClientKit
 
 struct AppSupabaseClientProvider: SupabaseClientProvider {
 
-    let development: SupabaseClient
-    let production: SupabaseClient
-
-    init() {
-        development = SupabaseClient(
-            supabaseURL: URL(string: "https://your-project-dev.supabase.co")!,
-            supabaseKey: "your-dev-anon-key"
-        )
-
-        production = SupabaseClient(
-            supabaseURL: URL(string: "https://your-project.supabase.co")!,
-            supabaseKey: "your-anon-key"
-        )
-    }
+    let devProjectURL: String = "https://your-project-dev.supabase.co"
+    let prodProjectURL: String = "https://your-project.supabase.co"
+    let devToken: String = "your-dev-anon-key"
+    let prodToken: String = "your-anon-key"
+    let devBucketName: String = "avatars"
+    let prodBucketName: String = "avatars"
 }
 ```
+
+The `development` and `production` `SupabaseClient` instances are created automatically from these values — you don't need to implement them yourself.
 
 > Use the **anon/public** keys from the Supabase dashboard. Never ship your service-role key in a client app.
 
@@ -283,22 +278,18 @@ try await supabaseManager.delete(
 
 ## Storage
 
-`StorageManager` uploads files (e.g. photos) to a Supabase Storage bucket and returns the generated file path.
+`StorageManager` uploads photos to a Supabase Storage bucket and returns the public URL of each upload.
 
 ```swift
-let path = try await storageManager.uploadPhoto(
-    withData: imageData,
-    bucketName: "avatars",
-    projectURL: "https://your-project.supabase.co"
+let url = try await storageManager.uploadPhoto(
+    forId: userId,
+    imageData: imageData,
+    bucketName: "avatars"
 )
-print("Uploaded to \(path)")
+print("Uploaded to \(url)")
 ```
 
-The returned path is a UUID-based filename, so collisions are avoided and `upsert: true` is used on upload. Public URLs can then be built as:
-
-```swift
-let publicURL = URL(string: "https://your-project.supabase.co/storage/v1/object/public/avatars/\(path)")!
-```
+Photos are stored under the `avatars` bucket at the path `{userId}/avatar.jpg`. Upload multiple images at once with `uploadPhotos(forId:imagesData:bucketName:)`, which stores them as `{userId}/{index}.jpg`. The bucket name used for uploads comes from the kit — `devBucketName` in debug builds and `prodBucketName` in release builds.
 
 > **Note:** `StorageManager` currently lives in the package target with internal access and is in the process of being finalized. A public API for storage will be exposed in an upcoming release.
 
