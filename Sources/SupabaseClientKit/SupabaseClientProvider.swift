@@ -19,7 +19,7 @@ public protocol SupabaseClientProvider: Sendable {
 }
 
 
-extension SupabaseClientProvider {
+public extension SupabaseClientProvider {
     
     var development: SupabaseClient {
         return SupabaseClient(supabaseURL: URL(string: self.devProjectURL)!, supabaseKey: devToken)
