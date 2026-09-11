@@ -55,7 +55,7 @@ targets: [
 
 `SupabaseClientKit` needs a `SupabaseClientProvider`, a protocol that supplies the configuration for both your development and production Supabase projects.
 
-The protocol requires four string properties — the project URLs, anon keys, and storage bucket names for each environment:
+The protocol requires four string properties — the project URLs and anon keys for each environment:
 
 ```swift
 import SupabaseClientKit
@@ -66,8 +66,6 @@ struct AppSupabaseClientProvider: SupabaseClientProvider {
     let prodProjectURL: String = "https://your-project.supabase.co"
     let devToken: String = "your-dev-anon-key"
     let prodToken: String = "your-anon-key"
-    let devBucketName: String = "avatars"
-    let prodBucketName: String = "avatars"
 }
 ```
 
@@ -289,9 +287,9 @@ let url = try await storageManager.uploadPhoto(
 print("Uploaded to \(url)")
 ```
 
-Photos are stored under the `avatars` bucket at the path `{userId}/avatar.jpg`. Upload multiple images at once with `uploadPhotos(forId:imagesData:bucketName:)`, which stores them as `{userId}/{index}.jpg`. The bucket name used for uploads comes from the kit — `devBucketName` in debug builds and `prodBucketName` in release builds.
+Photos are stored under the `avatars` bucket at the path `{userId}/avatar.jpg`. Upload multiple images at once with `uploadPhotos(forId:imagesData:bucketName:)`, which stores them as `{userId}/{index}.jpg`. The bucket name is supplied as a parameter to each upload call.
 
-> **Note:** `StorageManager` currently lives in the package target with internal access and is in the process of being finalized. A public API for storage will be exposed in an upcoming release.
+> **Note:** `StorageManager` lives in its own directory under `Sources/` and is not yet declared as a target in `Package.swift`. It is still in the process of being finalized — a public storage API will be exposed in an upcoming release.
 
 ## Example App Setup (SwiftUI)
 
