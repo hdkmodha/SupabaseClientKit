@@ -19,6 +19,10 @@ let package = Package(
             name: "SupabaseClientKit",
             targets: ["SupabaseClientKit"]
         ),
+        .library(
+            name: "StorageManager",
+            targets: ["StorageManager"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/supabase/supabase-swift.git", .upToNextMajor(from: "2.48.0"))
@@ -31,6 +35,12 @@ let package = Package(
             name: "SupabaseClientKit",
             dependencies: [
                 .supabase,
+            ]
+        ),
+        .target(
+            name: "StorageManager",
+            dependencies: [
+                "SupabaseClientKit"
             ]
         ),
         .testTarget(

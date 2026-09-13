@@ -5,10 +5,12 @@
 //  Created by Hardik Modha on 20/07/26.
 //
 
+import Foundation
+import SupabaseClientKit
 import Supabase
 
 
-final class StorageManager {
+final class StorageManager: Sendable {
     
     let supabaseClient: SupabaseClientKit
     
@@ -22,15 +24,15 @@ final class StorageManager {
     
     public func uploadPhoto(forId id: UUID, imageData: Data, bucketName: String) async throws -> String {
         let path = "\(id)/avatar.jpg"
-        return try await self.uploadImage(forPath: path, data: data, bucketName: bucketName)
+        return try await self.uploadImage(forPath: path, data: imageData, bucketName: bucketName)
     }
     
     
     public func uploadPhotos(forId id: UUID, imagesData: [Data], bucketName: String) async throws -> [String] {
-        return try await withThrowingTaskGroup(of: [String].self) { group in
+        return try await withThrowingTaskGroup(of: String.self) { group in
             for (index, data) in imagesData.enumerated() {
-                group.addTask {
-                    let path = try await uploadImages(withId: id, data: data, bucketName: bucketName, index: index)
+                group.addTask { 
+                    let path = try await self.uploadImages(withId: id, data: data, bucketName: bucketName, index: index)
                     return path
                 }
             }
@@ -55,12 +57,12 @@ final class StorageManager {
             .client
             .storage
             .from(bucketName)
-            .update(path, data: imageData)
+            .update(path, data: data)
             .path
         
         print("Full path: \(fullPath)")
         
-        let publicURL = "\(self.client.projectURL)/storage/v1/object/public/\(bucketName)/\(path)"
+        let publicURL = "\(self.supabaseClient.projectURL)/storage/v1/object/public/\(bucketName)/\(path)"
         
         return publicURL
         

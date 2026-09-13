@@ -16,7 +16,7 @@ public final class SupabaseClientKit: Sendable {
         self.clientProvider = clientProvider
     }
         
-    var client: SupabaseClient {
+    public var client: SupabaseClient {
         #if DEBUG
         self.clientProvider.development
         #else
@@ -25,7 +25,7 @@ public final class SupabaseClientKit: Sendable {
     }
     
     
-    var projectURL: String {
+    public var projectURL: String {
         #if DEBUG
         self.clientProvider.devProjectURL
         #else
