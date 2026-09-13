@@ -10,7 +10,7 @@ import SupabaseClientKit
 import Supabase
 
 
-final class StorageManager: Sendable {
+public final class StorageManager: Sendable {
     
     let supabaseClient: SupabaseClientKit
     
